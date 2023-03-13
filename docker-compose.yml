@@ -1,0 +1,45 @@
+version: '3.5'
+
+services:
+  fragematning:
+    container_name: fragematning
+    image: ghcr.io/kth-biblioteket/fragematning:main
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.fragematning.rule=Host(`apps.sites.lib.kth.se`) && PathPrefix(`/fragematning`)"
+      - "traefik.http.routers.fragematning.middlewares=fragematning-stripprefix"
+      - "traefik.http.middlewares.fragematning-stripprefix.stripprefix.prefixes=/fragematning"
+      - "traefik.http.middlewares.fragematning-stripprefix.stripprefix.forceSlash=false"
+      - "traefik.http.routers.fragematning.entrypoints=websecure"
+      - "traefik.http.routers.fragematning.tls=true"
+      - "traefik.http.routers.fragematning.tls.certresolver=myresolver"
+    volumes:
+      - "./config_fe.json:/app/frontend/src/config.json:ro"
+      - "./config_be.json:/app/backend/config.json:ro"
+    networks:
+      - "apps-net"
+  
+  fragematning-db:
+    container_name: fragematning-db
+    image: 'mysql:8.0'
+    volumes:
+      - persistent-fragematning-db:/var/lib/mysql
+      - ./dbinit:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      TZ: Europe/Stockholm
+    networks:
+      - "apps-net"
+
+volumes:
+  persistent-fragematning-db:
+
+networks:
+  apps-net:
+    external: true

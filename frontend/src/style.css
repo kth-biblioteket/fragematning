@@ -1,0 +1,590 @@
+
+:root {
+    --key-color: #666;
+    --base-font: 'Open Sans';
+    --semi-bold-font: 'Open Sans';
+    --bold-font: 'Open Sans';
+}
+
+/*
+ *** Typsnitt ***/
+
+@font-face {
+    font-family: 'Zilla Slab Bold';
+    src: url('./ZillaSlab-Bold.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Zilla Slab SemiBold';
+    src: url('./ZillaSlab-SemiBold.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Zilla Slab Light';
+    src: url('./ZillaSlab-Light.woff') format('woff');
+}
+
+
+@font-face {
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: 300;
+    src: url(./mem5YaGs126MiZpBA-UN_r8OUuhpKKSTjw-8200f3daceb453809e0575364d73ca1f.woff2) format("woff2");
+    unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD
+}
+
+@font-face {
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: 400;
+    src: url(./mem8YaGs126MiZpBA-UFVZ0bf8pkAg-358d3070946a90b4960cd111154fdc12.woff2) format("woff2");
+    unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD
+}
+
+@font-face {
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: 600;
+    src: url(./mem5YaGs126MiZpBA-UNirkOX-hpKKSTj5PW-f98f9cf9e6d5ea92c204805862da3ebb.woff2) format("woff2");
+    unicode-range: U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F
+}
+
+@font-face {
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: 600;
+    src: url(./mem5YaGs126MiZpBA-UNirkOVuhpKKSTj5PW-b1ed13e320ce8a20bcbc72d816a5b22c.woff2) format("woff2");
+    unicode-range: U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116
+}
+
+@font-face {
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: 600;
+    src: url(./mem5YaGs126MiZpBA-UNirkOXuhpKKSTj5PW-68ee61370a77859b0b1f560e6243f486.woff2) format("woff2");
+    unicode-range: U+1F00-1FFF
+}
+
+@font-face {
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: 600;
+    src: url(./mem5YaGs126MiZpBA-UNirkOUehpKKSTj5PW-783d8cf7c332574b69fb7950f29da2e5.woff2) format("woff2");
+    unicode-range: U+0370-03FF
+}
+
+@font-face {
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: 600;
+    src: url(./mem5YaGs126MiZpBA-UNirkOXehpKKSTj5PW-b707c3f59d12f325469ff2d2367e376a.woff2) format("woff2");
+    unicode-range: U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+1EA0-1EF9,U+20AB
+}
+
+@font-face {
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: 600;
+    src: url(./mem5YaGs126MiZpBA-UNirkOXOhpKKSTj5PW-ea10852dd6f3c0a059695a402e9f6bb1.woff2) format("woff2");
+    unicode-range: U+0100-024F,U+0259,U+1E00-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF
+}
+
+@font-face {
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: 600;
+    src: url(./mem5YaGs126MiZpBA-UNirkOUuhpKKSTjw-a01def30f4398df303f818579d05f4ea.woff2) format("woff2");
+    unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD
+}
+
+
+/*
+ *** Animationer ***/
+
+@keyframes button-animation {
+    0%, 100% { pointer-events: none; } /* förhindrar hover-effekt */
+    25% { transform: translateX(100px); opacity: 0 }
+    26% { transform: none }
+    100% { opacity: 1 }
+}
+
+@keyframes slide-in {
+    from { opacity: 0; transform: translateX(-100%); }
+    to { opacity: 1; transform: none; }
+}
+
+@keyframes slide-out {
+    0%, 100% { position: absolute }
+    100% { opacity: 0; transform: translateX(100%); }
+}
+
+@keyframes fade-out {
+    from { opacity: 1 }
+    to { opacity: 0 }
+}
+
+/*
+ *** Struktur och allmänt ***/
+
+html {
+  overflow-y: scroll;
+  font-size: 16px;
+}
+
+body {
+    color: #333;
+    font-family: var(--base-font), Arial, sans-serif;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+body > div {
+    align-items: flex-start;
+    display: flex;
+    margin: auto;
+    max-width: 1250px;
+}
+
+body > div > div {
+    margin: 0 1rem 1rem 2rem;
+    flex: 1 0 0;
+}
+
+header {
+    display: flex;
+    align-items: flex-end;
+}
+
+header h1 {
+    font-family: var(--bold-font), Arial, sans-serif;
+    font-size: 3rem;
+    margin: 0 0 1.5rem 0;
+}
+
+aside {
+    border-left: 1px solid #666;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+    padding: 150px 1.5rem 0 1rem;
+    width: 250px;
+}
+
+main {
+    margin-bottom: 3rem;
+}
+
+h2 {
+    font-family: var(--semi-bold-font), Arial, sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+a {
+    color: #333;
+    text-decoration: none;
+}
+
+.kth-header {
+   margin-top: 25px;
+}
+
+.kth-header .navbar-brand {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.kth-header .navbar-brand:hover {
+    color: black;
+ }
+
+#kth-sitename {
+    font-weight: 600;
+    font-size: 1em;
+    padding-left: 30px;
+    top: -5px;
+    position: relative;
+}
+
+#gradientBorder {
+    height: 6px;
+    background-image: linear-gradient(to left, #005ea4, #5c98c4);
+    margin-top: 10px;
+}
+
+.date-time {
+    white-space: pre;
+}
+
+.important-message {
+    background-color: var(--key-color);
+    border-top: 2px solid #333;
+    margin: 1em 0;
+    padding: 0.5em;
+}
+
+#instructions {
+    margin: 1em 0;
+}
+
+
+/*
+ *** Navigering ***/
+
+nav {
+    font-family: var(--semi-bold-font), Arial, sans-serif;
+    font-size: 1.5rem;
+}
+
+nav ol {
+    list-style-type: none;
+    margin: 0;
+    padding-left: 0;
+}
+
+nav li {
+    cursor: pointer;
+}
+
+nav li:hover {
+    transform: translateX(0.25em);
+}
+
+.active-menu-item {
+    transform: none !important;
+    color: #666;
+}
+
+
+/*
+ *** Formulär ***/
+
+label {
+    display: inline-block;
+    font-family: 'Open Sans', Arial, sans-serif;
+    height: 1.5em;
+    margin-top: 2px; /* kompenserar för fältens kantlinje */
+    margin-right: 0.25em;
+}
+
+input, select, textarea {
+    background-color: white;
+    border: 0;
+    border-bottom: 2px solid var(--key-color);
+    box-sizing: border-box;
+    color: black;
+    font-family: var(--base-font);
+    font-size: 1rem;
+    height: 1.5em;
+    padding: 0 5px;
+    vertical-align: top;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    margin-right: 0.25em;
+    margin-top: -1px;
+    vertical-align: middle;
+}
+
+input#date {
+    margin-right: 0.25em;
+}
+
+input::placeholder {
+    color: white;
+    opacity: 0.5;
+}
+
+#date, textarea#comment {
+    min-width: 190px;
+}
+
+select {
+  appearance: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: 0;
+}
+
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--base-font), Arial, sans-serif;
+    font-size: 1rem;
+}
+
+.form-inputs {
+    align-items: flex-start;
+    background-color: #1954a6;
+    color: white;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 1em;
+}
+
+.form-inputs:first-child {
+    padding: 1em 1em 0 1em;
+}
+
+.form-inputs > div {
+    margin-bottom: 1em;
+    margin-right: 1em;
+}
+
+.form-inputs button,
+.admin-functions button {
+    background-color: #666;
+    border-radius: 0.25em;
+    color: white;
+    font-family: 'Open Sans', Arial, sans-serif;
+    margin-bottom: 1em;
+    margin-right: 1em;
+    padding: 0.25em 0.5em;
+}
+
+.form-inputs button:hover,
+.admin-functions button:hover {
+    color: #c7c7c7;
+}
+
+
+/*
+ *** Frågemätning ***/
+
+#questions {
+    column-count: 3;
+    column-width: 300px;
+    margin-top: 1.5rem;
+}
+
+#questions h2 {
+    margin-bottom: 0.5em;
+    margin-top: 0;
+}
+
+#questions > div {
+    break-inside: avoid-column;
+    page-break-inside: avoid; /* För FF, där avoid-column inte fungerar */
+    margin-bottom: 1.5em;
+    /* Hack som förhindrar att element hoppar mellan kolumnerna vid
+       hover (se nedan) i FF och ev. vissa andra webbläsare */
+    display: inline-block;
+    width: 300px; /* Måste vara samma som column-width ovan. */
+}
+
+#questions button {
+    display: block;
+    padding: 0.1em 0;
+}
+
+#questions button:hover {
+    background-color: #333;
+    border-radius: 0.25em;
+    color: white;
+    font-family: var(--semi-bold-font), Arial, sans-serif;
+    margin-left: -0.5em;
+    padding: 0.1em 0.5em;
+}
+
+.button-animation {
+    animation: button-animation 2s;
+}
+
+#last-entry {
+    animation: slide-in 0.5s;
+    background-color: #666;
+    color: white;
+    line-height: 1.5em;
+    padding: 0.5em 1em;
+    transform-origin: top left;
+}
+
+#last-entry button {
+    background-color: #333;
+    border-radius: 0.25em;
+    color: white;
+    font-family: var(--semi-bold-font), Arial, sans-serif;
+    padding: 0.25em 0.5em;
+}
+
+#last-entry button:hover {
+    color: #c7c7c7;
+}
+
+#last-entry em {
+    color: white;
+    font-family: var(--semi-bold-font), Arial, sans-serif;
+    font-style: normal;
+}
+
+#last-entry span {
+    margin: 0.5em;
+}
+
+#last-entry.first-last-entry {
+    background-color: var(--key-color);
+    border-bottom: 2px solid #333;
+    color: white;
+}
+#last-entry.first-last-entry em {
+    color: white;
+}
+
+#info {
+    background-color: #666;
+    color: white;
+    padding: 0.5em 1em;
+    border-radius: 0.25em;
+    filter: drop-shadow(2px 2px 2px black);
+    margin-left: 0.5em;
+    display: none;
+    position: absolute;
+    max-width: 300px;
+}
+
+
+/*
+ *** Resultat ***/
+
+#results {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 2em 0;
+}
+
+.chart {
+    flex-basis: 50%;
+}
+
+.chart-doughnut {
+    flex-basis: 33% !important;
+}
+
+.chart h2 {
+    margin: 1em 0 0.5em 0;
+}
+
+.results-table {
+    flex-basis: 100%;
+    margin-top: 1.5rem;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+thead tr {
+    background-color: #333;
+    border: 0;
+}
+
+tbody tr {
+    border-bottom: 1px solid #ddd;
+}
+
+tbody tr:last-child {
+    border: 0;
+}
+
+th {
+    color: white;
+    font-family: var(--semi-bold-font), Arial, sans-serif;
+    padding: 0.5em 1em;
+    text-align: left;
+    white-space: nowrap;
+}
+
+td {
+    padding: 0.25em 1em;
+}
+
+tbody tr:first-child td {
+    padding-top: 0.5em;
+}
+
+
+/*
+ *** Administration ***/
+
+.admin-table th:last-child {
+    width: 20px;
+}
+
+.admin-table input,
+.admin-table select {
+    background-color: initial;
+    border: 0;
+    color: #333;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.admin-table select {
+    max-width: 200px;
+}
+
+.admin-table input:focus,
+.admin-table select:focus {
+    border-left: 5px solid var(--key-color);
+    margin-left: -5px;
+}
+
+.admin-table tbody tr:last-child {
+    border-bottom: 1px solid #ddd;
+}
+
+.admin-functions {
+    margin: 1em 0;
+    text-align: right;
+}
+
+
+/*
+ *** Nödtorftiga anpassningar för små skärmar ***/
+
+@media (max-width: 800px) {
+    body > div {
+        flex-direction: column-reverse;
+    }
+
+    header {
+        height: auto;
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+
+    aside {
+        border-bottom: 1px solid #666;
+        border-left: 0;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        width: 100%;
+    }
+
+    .form-inputs,
+    #last-entry {
+        margin: 0 -1rem;
+    }
+
+    table {
+        table-layout: fixed;
+    }
+
+    th, td {
+        white-space: initial;
+        overflow-wrap: break-word;
+    }
+
+    .date-time {
+        white-space: initial;
+    }
+}

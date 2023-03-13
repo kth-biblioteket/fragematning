@@ -1,0 +1,23 @@
+{
+    "types": [
+        "infodisk",
+        "chatt",
+        "Easit/allmänt",
+        "Alma-mejl",
+        "telefon",
+        "ute i biblioteket"
+    ],
+    "locations": [
+        "ospecificerad",
+        "Kalmar",
+        "Växjö"
+    ],
+    "users": [
+        "UB",
+        "Infocenter"
+    ],
+    "session_ttl_minutes": 120,
+    "instructions": "",
+    "title": "Frågemätning",
+    "comment_maxlength": 255
+}

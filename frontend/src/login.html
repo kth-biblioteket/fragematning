@@ -1,0 +1,69 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <style>
+        .login-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-wrapper">
+        <h1>Logga in</h1>
+        <form onsubmit="return false;" id="loginform">
+            <label class="form-label">KTH-id</label>
+            <input class="form-control" type="username" id="username" name="username" placeholder="Ange KTH-id" />
+            <label class="form-label">Lösenord</label>
+            <input class="form-control" type="password" id="password" name="password" placeholder="Ange lösenord" />
+            <button id="submit" type="button" class="btn btn-primary" type="submit" onclick="loginUser()">Submit</button>
+        </form>
+        <div id="errormessage">
+        </div>
+    </div>
+    <script>
+        $('#loginform').on('keydown', 'input', function(e) {
+            if (e.keyCode === 13) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                $('#submit').click();
+            }
+        });
+        
+        function loginUser() {
+            var username = document.getElementById("username").value ;
+            var password = document.getElementById("password").value;
+            credentials = {
+                username,
+                password
+            }
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    sessionStorage.setItem("token", JSON.parse(this.responseText).token);
+                    location.href = "/fragematning"
+                }
+                if (this.readyState == 4 && this.status !== 200) {
+                    document.getElementById("errormessage").innerHTML = "Wrong credentials!";
+                }
+            };
+            xhttp.open("POST", "/fragematning/api/v1/login");
+            xhttp.setRequestHeader("Content-type", "application/json");
+            xhttp.send(JSON.stringify(credentials));
+        }
+    </script>
+</body>
+
+</html>
