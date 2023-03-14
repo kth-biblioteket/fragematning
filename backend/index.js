@@ -128,8 +128,9 @@ apiRoutes.post("/api/v1/login", async function login(req, res) {
             httpOnly: true,
             secure: config.node_env !== "development",
         })
-        .status(200)
-        .json({ message: "Success" });
+        //.status(200)
+        //.json({ message: "Success" });
+        .sendFile(__dirname.replace(/\w*$/, '') + 'frontend/dist/index.html');
     } catch(err) {
         res.status(401)
         res.json({ message: err.message });
@@ -140,8 +141,9 @@ apiRoutes.post("/api/v1/login", async function login(req, res) {
 apiRoutes.post("/api/v1/logout", async function logout(req, res) {
     res
     .clearCookie("jwt")
-    .status(200)
-    .json({ message: "Success" });
+    //.status(200)
+    //.json({ message: "Success" });
+    .sendFile(__dirname.replace(/\w*$/, '') + 'frontend/dist/index.html');
 });
 
 apiRoutes.get('/categories', async (req, res) => {
