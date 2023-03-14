@@ -365,7 +365,6 @@ apiRoutes.get('/admin', (req, res) => {
 
 //Skickar alla subroutes till frontend
 apiRoutes.get(/^\/\w+$/,  (req, res) => {
-    console.log(__dirname.replace(/\w*$/, '') + 'frontend/dist/index.html')
     res.sendFile(__dirname.replace(/\w*$/, '') + 'frontend/dist/index.html');
 });
 
