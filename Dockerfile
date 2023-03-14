@@ -13,4 +13,7 @@ WORKDIR /app/backend
 RUN npm install
 ENV TZ=Europe/Stockholm
 
+## Se till att den lokala containerporten exponeras för reverse proxy
+EXPOSE 80
+
 CMD ["npm", "run", "prod"]
