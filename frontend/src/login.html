@@ -53,13 +53,13 @@
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     sessionStorage.setItem("token", JSON.parse(this.responseText).token);
-                    location.href = "/fragematning"
+                    location.href = "/"
                 }
                 if (this.readyState == 4 && this.status !== 200) {
                     document.getElementById("errormessage").innerHTML = "Wrong credentials!";
                 }
             };
-            xhttp.open("POST", "/fragematning/api/v1/login");
+            xhttp.open("POST", "/api/v1/login");
             xhttp.setRequestHeader("Content-type", "application/json");
             xhttp.send(JSON.stringify(credentials));
         }
