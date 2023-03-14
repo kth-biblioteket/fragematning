@@ -363,6 +363,7 @@ apiRoutes.get('/admin', (req, res) => {
 });
 
 apiRoutes.get(/^\/\w+$/,  (req, res) => {
+    console.log(__dirname.replace(/\w*$/, '') + 'frontend/dist/index.html')
     res.sendFile(__dirname.replace(/\w*$/, '') + 'frontend/dist/index.html');
 });
 
