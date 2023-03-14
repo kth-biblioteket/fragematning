@@ -13,4 +13,4 @@ WORKDIR /app/backend
 RUN npm install
 ENV TZ=Europe/Stockholm
 
-CMD ["npm", "prod"]
+CMD ["npm", "run", "prod"]
