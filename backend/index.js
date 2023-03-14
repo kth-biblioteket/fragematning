@@ -129,7 +129,7 @@ apiRoutes.post("/api/v1/login", async function login(req, res) {
             secure: config.node_env !== "development",
         })
         .status(200)
-        .json({ message: "Success", app_path: config.app_path });
+        .json({ message: "Success", app_path: config.app_path + '/'});
     } catch(err) {
         res.status(401)
         res.json({ message: err.message });
@@ -141,7 +141,7 @@ apiRoutes.post("/api/v1/logout", async function logout(req, res) {
     res
     .clearCookie("jwt_fragematning")
     .status(200)
-    .json({ message: "Success", app_path: config.app_path });
+    .json({ message: "Success", app_path: config.app_path + '/' });
 });
 
 apiRoutes.get('/categories', async (req, res) => {
