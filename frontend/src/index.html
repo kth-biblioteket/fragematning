@@ -51,7 +51,7 @@
       xhttp.onload = function () {
           if (xhttp.status == 401) {  
           }
-          location.href = "/"
+          location.href = JSON.parse(this.responseText).app_path
       };
       xhttp.open("POST", "api/v1/logout", true);
       xhttp.setRequestHeader('Content-Type', 'application/json');

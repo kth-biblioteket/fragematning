@@ -52,8 +52,8 @@
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    sessionStorage.setItem("token", JSON.parse(this.responseText).token);
-                    location.href = "/"
+                    //sessionStorage.setItem("token", JSON.parse(this.responseText).token);
+                    location.href = JSON.parse(this.responseText).app_path
                 }
                 if (this.readyState == 4 && this.status !== 200) {
                     document.getElementById("errormessage").innerHTML = "Wrong credentials!";
