@@ -33,7 +33,9 @@ app.use(function(req, res, next) {
     verifyToken(req, res, next)
 });
 
+
 app.use(config.app_path, express.static("../frontend/dist"));
+app.use(express.static("../frontend/dist"));
 
 app.use(express.json());
 
