@@ -130,7 +130,7 @@ export function logout() {
 	.fail(function(){
 	    // We expect to get an 401 Unauthorized error! In this case we are successfully 
             // logged out and we redirect the user.
-	    window.location = "/fragematning";
+	    window.location = "/";
     });
  
     return false;
