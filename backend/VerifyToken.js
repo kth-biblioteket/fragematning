@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const config = require('./config.json');
 
 function verifyToken(req, res, next) {
-    let token = req.cookies.jwt
+    let token = req.cookies.jwt_fragematning
 
     if (!token)
         return res.sendFile(__dirname.replace(/\w*$/, '') + 'frontend/dist/login.html');
@@ -10,7 +10,7 @@ function verifyToken(req, res, next) {
 
         jwt.verify(token, config.secret, async function (err, decoded) {
             if (err) {
-                res.clearCookie("jwt")
+                res.clearCookie("jwt_fragematning")
                 return res.sendFile(__dirname.replace(/\w*$/, '') + 'frontend/dist/login.html');
             }
    

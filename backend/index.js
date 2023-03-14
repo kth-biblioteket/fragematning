@@ -122,7 +122,7 @@ apiRoutes.post("/api/v1/login", async function login(req, res) {
             return res.json({ message: "wrong credentials" });
         }
         res
-        .cookie("jwt", jwttoken, {
+        .cookie("jwt_fragematning", jwttoken, {
             maxAge: 60 * 60 * 24 * 7 * 1000,
             sameSite: 'lax',
             httpOnly: true,
@@ -139,7 +139,7 @@ apiRoutes.post("/api/v1/login", async function login(req, res) {
 //Logout som anropas från index.html
 apiRoutes.post("/api/v1/logout", async function logout(req, res) {
     res
-    .clearCookie("jwt")
+    .clearCookie("jwt_fragematning")
     .status(200)
     .json({ message: "Success", app_path: config.app_path });
 });
@@ -345,12 +345,12 @@ apiRoutes.get('/undo/:id', async (req, res) => {
 
 //auktorisera vyerna från applikationen
 apiRoutes.get('/authorize', (req, res) => {
-    let token = req.cookies.jwt
+    let token = req.cookies.jwt_fragematning
     if (!token)
         return res.sendFile(__dirname.replace(/\w*$/, '') + 'frontend/dist/login.html');
     jwt.verify(token, config.secret, async function (err, decoded) {
         if (err) {
-            res.clearCookie("jwt")
+            res.clearCookie("jwt_fragematning")
             res.status(401).send({ auth: false, message: 'Failed to authenticate token, ' + err.message });
         }
          return res.status(200).send({ role: decoded.role});
