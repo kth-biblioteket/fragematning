@@ -27,6 +27,7 @@ app.use(cors(corsOptions));
 
 //Innan static files(dvs hela applikationen) skickas till klienten så görs en check av token
 app.use(function(req, res, next) {
+    //inte för login/logout
     if('/api/v1/login' == req.url || '/api/v1/logout' == req.url) {
         next()
     }
@@ -35,7 +36,7 @@ app.use(function(req, res, next) {
 
 
 app.use(config.app_path, express.static("../frontend/dist"));
-app.use(express.static("../frontend/dist"));
+app.use(express.static(path.join(__dirname, "frontend/dist")));
 
 app.use(express.json());
 
@@ -362,6 +363,7 @@ apiRoutes.get('/admin', (req, res) => {
     res.sendFile(__dirname.replace(/\w*$/, '') + 'frontend/dist/index.html');
 });
 
+//Skickar alla subroutes till frontend
 apiRoutes.get(/^\/\w+$/,  (req, res) => {
     console.log(__dirname.replace(/\w*$/, '') + 'frontend/dist/index.html')
     res.sendFile(__dirname.replace(/\w*$/, '') + 'frontend/dist/index.html');
