@@ -46,7 +46,7 @@ export default class {
         this.loginbtn.addEventListener('click', () => {
             var username = document.getElementById("username").value;
             var password = document.getElementById("password").value;
-            credentials = {
+            var credentials = {
                 username,
                 password
             }
