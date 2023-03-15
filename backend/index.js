@@ -141,7 +141,7 @@ apiRoutes.post("/api/v1/logout", async function logout(req, res) {
     res
     .clearCookie("jwt_fragematning")
     .status(200)
-    .json({ message: "Success", app_path: config.app_path + '/login.html' });
+    .json({ message: "Success", app_path: config.app_path + '/' });
 });
 
 apiRoutes.get('/categories', async (req, res) => {

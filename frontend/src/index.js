@@ -7,6 +7,7 @@ import Input from './input.js';
 import History from './history.js';
 import Results from './results.js';
 import Admin from './admin.js';
+import Login from './login.js';
 
 const config = require('./config.json');
 
@@ -57,7 +58,7 @@ if (config.instructions)
 
 const availableViews = config.read_only_interface
       ? [Results, Admin]
-      : [Input, History, Results, Admin];
+      : [Input, History, Results, Admin, Login];
 
 availableViews.forEach((View) => {
     const view = new View(root);
