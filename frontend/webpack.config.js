@@ -16,7 +16,8 @@ module.exports = {
             minify: { removeRedundantAttributes: false }
         }),
         new HtmlWebpackPlugin({
-            template: 'src/login.html'
+            template: 'src/login.html',
+            filename: 'login.html'
         }),
         new MiniCssExtractPlugin()
     ],
