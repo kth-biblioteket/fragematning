@@ -8,7 +8,6 @@ export default class {
         this.root = root;
         this.path = '/login';
         this.title = 'Login';
-        this.restricted = true;
     }
 
     async update () {
@@ -68,7 +67,6 @@ export default class {
             xhttp.send(JSON.stringify(credentials));
         });
 
-        this.update();
         return this.element;
     }
 }
