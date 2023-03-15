@@ -37,7 +37,7 @@ export default class {
 
         this.form = this.element.querySelector('form');
         this.loginbtn = this.element.querySelector('#submit');
-        this.form.addEventListener('keydown', 'input', function (e) {
+        this.form.addEventListener('keydown', function (e) {
             if (e.keyCode === 13) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
