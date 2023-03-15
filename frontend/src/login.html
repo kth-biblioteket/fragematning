@@ -59,7 +59,7 @@
                     document.getElementById("errormessage").innerHTML = "Wrong credentials!";
                 }
             };
-            xhttp.open("POST", "api/v1/login");
+            xhttp.open("POST", "/fragematning/api/v1/login");
             xhttp.setRequestHeader("Content-type", "application/json");
             xhttp.send(JSON.stringify(credentials));
         }
