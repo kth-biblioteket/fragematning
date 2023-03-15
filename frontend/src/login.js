@@ -27,8 +27,7 @@ export default class {
                     <input class="form-control" type="username" id="username" name="username" placeholder="Ange KTH-id" />
                     <label class="form-label">Lösenord</label>
                     <input class="form-control" type="password" id="password" name="password" placeholder="Ange lösenord" />
-                    <button id="submit" type="button" class="btn btn-primary" type="submit"
-                        onclick="loginUser()">Submit</button>
+                    <button id="submit" type="button" class="btn btn-primary" type="submit">Submit</button>
                 </form>
                 <div id="errormessage">
                 </div>
