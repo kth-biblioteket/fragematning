@@ -58,7 +58,7 @@ if (config.instructions)
 
 const availableViews = config.read_only_interface
       ? [Results, Admin]
-      : [Input, History, Results, Admin, Login];
+      : [Input, History, Results, Admin];
 
 availableViews.forEach((View) => {
     const view = new View(root);

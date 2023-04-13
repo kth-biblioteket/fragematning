@@ -10,8 +10,6 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.fragematning.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`${PATHPREFIX}`)"
-      - "traefik.http.routers.fragematning.middlewares=fragematning-stripprefix"
-      - "traefik.http.middlewares.fragematning-stripprefix.stripprefix.prefixes=${PATHPREFIX}"
       - "traefik.http.routers.fragematning.entrypoints=websecure"
       - "traefik.http.routers.fragematning.tls=true"
       - "traefik.http.routers.fragematning.tls.certresolver=myresolver"
