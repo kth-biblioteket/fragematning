@@ -3,11 +3,13 @@ version: '3.6'
 services:
   fragematning:
     container_name: fragematning
+    depends_on:
+      - fragematning-db
     image: ghcr.io/kth-biblioteket/fragematning:${REPO_TYPE}
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.alma-api-proxy.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`${PATHPREFIX}`)"
+      - "traefik.http.routers.fragematning.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`${PATHPREFIX}`)"
       - "traefik.http.routers.fragematning.middlewares=fragematning-stripprefix"
       - "traefik.http.middlewares.fragematning-stripprefix.stripprefix.prefixes=${PATHPREFIX}"
       - "traefik.http.routers.fragematning.entrypoints=websecure"
