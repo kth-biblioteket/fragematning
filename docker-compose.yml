@@ -3,14 +3,13 @@ version: '3.6'
 services:
   fragematning:
     container_name: fragematning
-    image: ghcr.io/kth-biblioteket/fragematning:main
+    image: ghcr.io/kth-biblioteket/fragematning:${REPO_TYPE}
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.fragematning.rule=Host(`apps.sites.lib.kth.se`) && PathPrefix(`/fragematning`)"
+      - "traefik.http.routers.alma-api-proxy.rule=Host(`${DOMAIN_NAME}`) && PathPrefix(`${PATHPREFIX}`)"
       - "traefik.http.routers.fragematning.middlewares=fragematning-stripprefix"
-      - "traefik.http.middlewares.fragematning-stripprefix.stripprefix.prefixes=/fragematning"
-      - "traefik.http.middlewares.fragematning-stripprefix.stripprefix.forceSlash=false"
+      - "traefik.http.middlewares.fragematning-stripprefix.stripprefix.prefixes=${PATHPREFIX}"
       - "traefik.http.routers.fragematning.entrypoints=websecure"
       - "traefik.http.routers.fragematning.tls=true"
       - "traefik.http.routers.fragematning.tls.certresolver=myresolver"
