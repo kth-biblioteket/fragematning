@@ -8,6 +8,7 @@ import History from './history.js';
 import Results from './results.js';
 import Admin from './admin.js';
 import Login from './login.js';
+import Logo from './KTH_Logotyp.svg';
 
 const config = require('./config.json');
 
@@ -21,6 +22,7 @@ const root = {
     nav: document.querySelector('nav'),
     menu: document.createElement('ol'),
     instructions: document.getElementById('instructions'),
+    logo: document.getElementById('logo'),
     type: null,
     location: null,
     entries: [],
@@ -50,6 +52,8 @@ root.session.reset();
 root.nav.appendChild(root.menu);
 root.views = {};
 root.activeMenuItem = null;
+
+root.logo.setAttribute('src', Logo)
 
 document.querySelector('title').innerText = root.title;
 
