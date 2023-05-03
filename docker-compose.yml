@@ -14,8 +14,8 @@ services:
       - "traefik.http.routers.fragematning.tls=true"
       - "traefik.http.routers.fragematning.tls.certresolver=myresolver"
     volumes:
-      - "./config_fe.json:/app/frontend/src/config.json:ro"
-      - "./config_be.json:/app/backend/config.json:ro"
+      - "/local/docker/fragematning/config_fe.json:/app/frontend/src/config.json:ro"
+      - "/local/docker/fragematning/config_be.json:/app/backend/config.json:ro"
     networks:
       - "apps-net"
   
