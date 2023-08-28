@@ -280,14 +280,14 @@ export default class {
                         <label for="type">Typ:</label>
                             <select id="type" name="type">
                             <option></option>
-                            ${ config.types.map(x => `<option>${x}</option>`).join() }
+                            ${ config.results.types.map(x => `<option>${x}</option>`).join() }
                         </select>
                     </div>
                     <div>
                         <label for="location">Plats:</label>
                         <select id="location" name="location">
                             <option></option>
-                            ${ config.locations.map(x => `<option>${x}</option>`).join() }
+                            ${ config.results.locations.map(x => `<option>${x}</option>`).join() }
                         </select>
                     </div>
                 </div>

@@ -12,6 +12,23 @@
         "Södertälje",
         "Ospecificerat"
     ],
+    "results": {
+        "types": [
+            "Telefon",
+            "Ute i rummet",
+            "Infodisk huvudbiblioteket",
+            "Infodisk Kista",
+            "Infodisk Södertälje",
+            "Edge",
+            "Chatt"
+        ],
+        "locations": [
+            "Huvudbiblioteket",
+            "Södertälje",
+            "Kista",
+            "Ospecificerat"
+        ]
+    },
     "users": [
         "kthb"
     ],
