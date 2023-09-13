@@ -1,9 +1,9 @@
 
 :root {
     --key-color: #666;
-    --base-font: 'Open Sans';
-    --semi-bold-font: 'Open Sans';
-    --bold-font: 'Open Sans';
+    --base-font: "Figtree";
+    --semi-bold-font: 'Figtree';
+    --bold-font: 'Figtree';
 }
 
 /*
@@ -182,6 +182,11 @@ h2 {
 a {
     color: #333;
     text-decoration: none;
+}
+
+.kth-logo {
+    width: 100px;
+    height: auto;
 }
 
 .kth-header {

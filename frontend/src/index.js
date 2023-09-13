@@ -8,7 +8,7 @@ import History from './history.js';
 import Results from './results.js';
 import Admin from './admin.js';
 import Login from './login.js';
-import Logo from './KTH_Logotyp.svg';
+import Logo from './kthlogo_marinbla.svg';
 
 const config = require('./config.json');
 
