@@ -135,25 +135,19 @@ export default class {
             return false;
         }
 
-        // Get the current date and time
+        //Dagens aktivitet
+        /*
         const currentDate = new Date();
-
-        // Set the start date to the beginning of the current day
         let startDate = new Date(currentDate);
         startDate.setHours(0, 0, 0, 0);
-
-        // Set the end date to the end of the current day
         let endDate = new Date(currentDate);
         endDate.setHours(23, 59, 59, 999);
-
-
-        // Use the filter() method to filter the data by created_at
         const filteredData = entries.filter(item => {
             const createdAt = new Date(item.created_at);
             return createdAt >= startDate && createdAt <= endDate;
         });
 
-        //Dagens aktivitet
+        
         if (filteredData.length) {
             const counts = countBy(filteredData, 'hour');
             
@@ -191,6 +185,7 @@ export default class {
                 'results-table-50'
                 )
         }
+        */
         {
             const counts = countBy(entries, 'hour');
             const values = new Array(24).fill(0);
