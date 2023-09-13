@@ -28,7 +28,7 @@ app.use(cors(corsOptions));
 //Innan static files(dvs hela applikationen) skickas till klienten så görs en check av token
 app.use(function(req, res, next) {
     //inte för login/logout
-    if(config.app_path + '/api/v1/login' == req.url || config.app_path + '/api/v1/logout' == req.url) {
+    if(config.app_path + '/api/v1/login' == req.url || config.app_path + '/api/v1/logout' == req.url || config.app_path + '/entries' == req.url) {
         next()
     }
     verifyToken(req, res, next)

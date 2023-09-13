@@ -43,6 +43,7 @@ export default class {
     addTable () {
         const div = createTable(...arguments);
         div.classList.add('results-table');
+        div.classList.add(arguments[4]);
         this.results.appendChild(div);
     }
 
@@ -134,6 +135,62 @@ export default class {
             return false;
         }
 
+        // Get the current date and time
+        const currentDate = new Date();
+
+        // Set the start date to the beginning of the current day
+        let startDate = new Date(currentDate);
+        startDate.setHours(0, 0, 0, 0);
+
+        // Set the end date to the end of the current day
+        let endDate = new Date(currentDate);
+        endDate.setHours(23, 59, 59, 999);
+
+
+        // Use the filter() method to filter the data by created_at
+        const filteredData = entries.filter(item => {
+            const createdAt = new Date(item.created_at);
+            return createdAt >= startDate && createdAt <= endDate;
+        });
+
+        //Dagens aktivitet
+        if (filteredData.length) {
+            const counts = countBy(filteredData, 'hour');
+            
+            const values = new Array(24).fill(0);
+            const labels = Array.from(values.keys());
+            Object.entries(counts).forEach(e => values[e[0]] = e[1]);
+
+            while (!values[0]) {
+                values.shift();
+                labels.shift();
+            }
+            while (!values[values.length - 1]) {
+                values.pop();
+                labels.pop();
+            }
+
+            this.addChart('Dagens aktivitet per timme', {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{ data: values }]
+                },
+            });
+
+            this.addTable(
+                groupBy(filteredData, 'question', 'category').sort((a, b) => b.count - a.count).slice(0, 5),
+                'Dagens 5 populäraste frågor',
+                ['Fråga', 'Kategori', 'Antal'],
+                (row, sum) => {
+                    return row
+                        ? [row.question, row.category, row.count]
+                        : ['', '', sum];
+                    
+                },
+                'results-table-50'
+                )
+        }
         {
             const counts = countBy(entries, 'hour');
             const values = new Array(24).fill(0);

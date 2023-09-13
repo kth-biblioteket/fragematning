@@ -475,6 +475,10 @@ button {
     margin-top: 1.5rem;
 }
 
+.results-table-50 {
+    flex-basis: 50%;
+}
+
 table {
     border-collapse: collapse;
     width: 100%;
