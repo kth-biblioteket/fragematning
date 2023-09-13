@@ -30,8 +30,9 @@ app.use(function(req, res, next) {
     //inte för login/logout
     if(config.app_path + '/api/v1/login' == req.url || config.app_path + '/api/v1/logout' == req.url || config.app_path + '/entries' == req.url) {
         next()
+    } else {
+        verifyToken(req, res, next)
     }
-    verifyToken(req, res, next)
 });
 
 
