@@ -220,11 +220,9 @@ export default class {
 
         this.update();
         socket.on('new-entry', (data) => {
-            console.log('new-entry')
             this.update();
         });
-
-        console.log(this.element)
+        
         return this.element;
     }
 }

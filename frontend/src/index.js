@@ -65,7 +65,6 @@ if (config.instructions)
 if (config.todaysactivity) {
     const todaysview = new Todaysactivity(root);
     todaysview.render().then(element => {
-        console.log(element)
         root.todaysactivity.innerHTML = '';
         root.todaysactivity.appendChild(element)
     });
