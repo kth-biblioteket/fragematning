@@ -165,7 +165,7 @@ aside {
     border-left: 1px solid #666;
     box-sizing: border-box;
     margin-bottom: 1rem;
-    padding: 150px 1.5rem 0 1rem;
+    padding: 0px 1.5rem 0 1rem;
     width: 250px;
 }
 
@@ -516,6 +516,24 @@ td {
 
 tbody tr:first-child td {
     padding-top: 0.5em;
+}
+
+#todaysresults {
+    font-size: 10px
+}
+
+#todaysresults h2 {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+#todaysresults td {
+    padding: 4px;
+    word-break: break-word;
+}
+
+#todaysresults th {
+    padding: 4px;
 }
 
 

@@ -6,6 +6,7 @@ import { get } from './helpers.js';
 import Input from './input.js';
 import History from './history.js';
 import Results from './results.js';
+import Todaysactivity from './todaysactivity.js';
 import Admin from './admin.js';
 import Login from './login.js';
 import Logo from './kthlogo_marinbla.svg';
@@ -22,6 +23,7 @@ const root = {
     nav: document.querySelector('nav'),
     menu: document.createElement('ol'),
     instructions: document.getElementById('instructions'),
+    todaysactivity: document.getElementById('todaysactivity'),
     logo: document.getElementById('logo'),
     type: null,
     location: null,
@@ -59,6 +61,15 @@ document.querySelector('title').innerText = root.title;
 
 if (config.instructions)
     root.instructions.innerHTML = config.instructions;
+
+if (config.todaysactivity) {
+    const todaysview = new Todaysactivity(root);
+    todaysview.render().then(element => {
+        console.log(element)
+        root.todaysactivity.innerHTML = '';
+        root.todaysactivity.appendChild(element)
+    });
+}
 
 const availableViews = config.read_only_interface
       ? [Results, Admin]
