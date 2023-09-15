@@ -18,6 +18,8 @@ const apiRoutes = express.Router();
 
 app.use(cookieParser());
 
+const socketIo = require("socket.io");
+
 var corsOptions = {
     origin: config.allowed_origins,
     optionsSuccessStatus: 200
@@ -326,6 +328,8 @@ apiRoutes.post('/add', async (req, res) => {
             SELECT a.*, b.description, b.info FROM entries a JOIN questions b
                 ON a.question = b.id
                 WHERE a.id = ?`, result.insertId);
+        //Skicka socketmeddelande om att en fråga registrerats(för att fångas upp av klient)
+        io.emit("new-entry", formatEntry(entry[0]))
 
         res.send(formatEntry(entry[0]));
     } catch (error) {
@@ -370,4 +374,24 @@ apiRoutes.get(/^\/\w+$/,  (req, res) => {
 
 app.use(config.app_path, apiRoutes);
 
-app.listen(config.port);
+const server = app.listen(config.port);
+
+//Socket
+const io = socketIo(server, {
+    cors: {
+        origin: config.allowed_origins,
+        methods: ['GET', 'POST'],
+    },
+    path: config.app_path + "/socket.io"
+})
+
+const sockets = {}
+
+io.on("connection", (socket) => {
+    socket.on("connectInit", (sessionId) => {
+        sockets[sessionId] = socket.id
+        app.set("sockets", sockets)
+    })
+})
+
+app.set("io", io)
