@@ -166,8 +166,8 @@ export default class {
         let endDate = new Date(currentDate);
         endDate.setHours(23, 59, 59, 999);
         const filteredData = entries.filter(item => {
-            const createdAt = new Date(item.created_at);
-            return createdAt >= startDate && createdAt <= endDate;
+            const questionDate = new Date(item.question_date);
+            return questionDate >= startDate && questionDate <= endDate;
         });
 
         
@@ -222,7 +222,7 @@ export default class {
         socket.on('new-entry', (data) => {
             this.update();
         });
-        
+
         return this.element;
     }
 }
