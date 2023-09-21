@@ -378,7 +378,8 @@ button {
     margin-bottom: 1.5em;
     /* Hack som förhindrar att element hoppar mellan kolumnerna vid
        hover (se nedan) i FF och ev. vissa andra webbläsare */
-    display: inline-block;
+    /* bort 230921 TL /*
+    /*display: inline-block;*/
     width: 300px; /* Måste vara samma som column-width ovan. */
 }
 
