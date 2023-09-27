@@ -376,6 +376,8 @@ app.use(config.app_path, apiRoutes);
 
 const server = app.listen(config.port);
 
+console.log(new Date().toLocaleString());
+
 //Socket
 const io = socketIo(server, {
     cors: {
