@@ -329,9 +329,12 @@ apiRoutes.post('/add', async (req, res) => {
                 ON a.question = b.id
                 WHERE a.id = ?`, result.insertId);
         //Skicka socketmeddelande om att en fråga registrerats(för att fångas upp av klient)
-        io.emit("new-entry", formatEntry(entry[0]))
+        io.emit("new-entry", entry[0])
 
-        res.send(formatEntry(entry[0]));
+        // Verkar som det inte behövs anpassas till local för att visa rätt tid i klienten
+        // Utred mer vad som händer och sätt inget "formatEntry" tills vidare
+        res.send(entry[0]);
+        //res.send(formatEntry(entry[0]));
     } catch (error) {
         console.log(error);
         res.status(400).end();
