@@ -9,3 +9,10 @@
 .cache
 .env
 .vscode
+dev
+Dockerfile-dev
+docker-compose-dev.yml
+package-dev.json
+config_be.json
+config_fe.json
+
