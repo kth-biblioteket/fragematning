@@ -48,7 +48,7 @@ export default class {
         this.results.appendChild(div);
     }
 
-    addChart (title, chart) {
+    addChart (title, chart, group = false) {
         const div = document.createElement('div');
         const canvas = document.createElement('canvas');
 
@@ -157,7 +157,7 @@ export default class {
 
         if (chart.type === 'bar') {
             //Sätt legend bara för gruppering
-            if (!chart.options && !chart.options.plugins && !chart.options.plugins.legend) {
+            if (!group) {
                 chart.options.plugins.legend = { display: false };
             }
             //Sätt färg för bar chart som bara har ett dataset()
@@ -305,7 +305,7 @@ export default class {
                         },
                     },
                 },
-            });
+            },groupByYearBoolean);
         }
     
         {
@@ -334,7 +334,7 @@ export default class {
                         },
                     },
                 },
-            });
+            },groupByYearBoolean);
         }
     
         {
@@ -363,7 +363,7 @@ export default class {
                         },
                     },
                 },
-            });
+            },groupByYearBoolean);
         }
         {
             const counts = countBy(entries, 'year');
