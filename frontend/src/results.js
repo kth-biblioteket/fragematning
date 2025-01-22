@@ -87,6 +87,7 @@ export default class {
         }
         this.results.appendChild(div);
 
+        //Diagramfärger från config.json(KTH grafiska profil)
         const setCategoryColors = (labels) => {
             return labels.map(label => config.chartcolors[label] || "#000000");
         };
@@ -100,7 +101,32 @@ export default class {
         }, chart.options);
 
         if (chart.type === 'bar') {
+            // Hitta min och max index som inte är noll över alla datasets
+            let minIndex = null;
+            let maxIndex = null;
+
+            chart.data.datasets.forEach(dataset => {
+                dataset.data.forEach((value, index) => {
+                    if (value !== 0) {
+                        if (minIndex === null || index < minIndex) {
+                            minIndex = index; // Uppdatera minIndex
+                        }
+                        if (maxIndex === null || index > maxIndex) {
+                            maxIndex = index; // Uppdatera maxIndex
+                        }
+                    }
+                });
+            });
+
+            // Veckor indexerade 0-51 men 1-52 ska visas
+            if (title === 'Vecka') {
+                maxIndex = maxIndex + 1;
+            }
             chart.options.scales = {
+                x: {
+                    min: minIndex,
+                    max: maxIndex,
+                },
                 y: {
                     max: currentMax
                 }
@@ -130,15 +156,14 @@ export default class {
         };
 
         if (chart.type === 'bar') {
-            if (chart.options && chart.options.plugins && chart.options.plugins.legend) {
-                //do nothing
-            } else {
+            //Sätt legend bara för gruppering
+            if (!chart.options && !chart.options.plugins && !chart.options.plugins.legend) {
                 chart.options.plugins.legend = { display: false };
             }
-
+            //Sätt färg för bar chart som bara har ett dataset()
             chart.data.datasets = chart.data.datasets.map(ds =>
                 Object.assign({
-                    backgroundColor: '#666',
+                    backgroundColor: config.colorSortOrder[0],
                 }, ds)
             );
         } else if (chart.type === 'doughnut') {
@@ -146,7 +171,6 @@ export default class {
 
             const labels = chart.data.labels || [];
             const backgroundColors = setCategoryColors(labels);
-
             chart.data.datasets = chart.data.datasets.map(ds =>
                 Object.assign({
                     backgroundColor: backgroundColors,
@@ -159,7 +183,6 @@ export default class {
         if (chart.type === 'bar') {
             slider.addEventListener('input', function () {
                 const newMax = Number(slider.value);
-                console.log('New max value:', newMax);
                 sliderValueDisplay.textContent = newMax;
 
                 if (chartInstance.options.scales && chartInstance.options.scales.y) {
@@ -202,6 +225,7 @@ export default class {
         this.results.innerHTML = '';
 
         let datasets = [];
+        let labels;
 
         const entries = await get('entries' + (queryString ? '?' + queryString : ''));
 
@@ -218,7 +242,11 @@ export default class {
             const grouped = {};
             entries.forEach(entry => {
                 const year = entry.year;
-                const value = entry[key];
+                let value = entry[key];
+                // Justera index endast för veckor
+                if (key === 'week') {
+                    value = value - 1; // Vecka 1 motsvarar index 0
+                }
                 if (!grouped[year]) {
                     grouped[year] = {};
                 }
@@ -242,6 +270,7 @@ export default class {
                 Object.entries(counts).forEach(([key, count]) => {
                     data[key] = count;
                 });
+
                 return {
                     label: `${labelPrefix} ${year}`,
                     data: data,
@@ -251,29 +280,21 @@ export default class {
         };
 
         {
+            const values = new Array(24).fill(0);
+            labels = Array.from(values.keys());
             if (groupByYearBoolean) {
                 const groupedByYear = groupByYear(entries, 'hour');
                 datasets = createDatasets(groupedByYear, '');
+
             } else {
                 const counts = countBy(entries, 'hour');
-                const values = new Array(24).fill(0);
-                const labels = Array.from(values.keys());
                 Object.entries(counts).forEach(e => values[e[0]] = e[1]);
-
-                while (!values[0]) {
-                    values.shift();
-                    labels.shift();
-                }
-                while (!values[values.length - 1]) {
-                    values.pop();
-                    labels.pop();
-                }
                 datasets = [{ data: values }]
             }
             this.addChart('Timma', {
                 type: 'bar',
                 data: {
-                    labels: Array.from({ length: 24 }, (_, i) => i),
+                    labels: labels,
                     datasets: datasets,
                 },
                 options: {
@@ -289,29 +310,20 @@ export default class {
     
         {
             datasets = [];
+            labels = ['Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lördag', 'Söndag']
             if (groupByYearBoolean) {
                 const groupedByYear = groupByYear(entries, 'weekday');
                 datasets = createDatasets(groupedByYear, '');
             } else {
                 const counts = countBy(entries, 'weekday');
-                const values = new Array(24).fill(0);
-                const labels = Array.from(values.keys());
+                const values = new Array(7).fill(0);
                 Object.entries(counts).forEach(e => values[e[0]] = e[1]);
-
-                while (!values[0]) {
-                    values.shift();
-                    labels.shift();
-                }
-                while (!values[values.length - 1]) {
-                    values.pop();
-                    labels.pop();
-                }
                 datasets = [{ data: values }]
             }
             this.addChart('Veckodag', {
                 type: 'bar',
                 data: {
-                    labels: ['Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lördag', 'Söndag'],
+                    labels: labels,
                     datasets: datasets,
                 },
                 options: {
@@ -327,29 +339,20 @@ export default class {
     
         {
             datasets = [];
+            const values = new Array(53).fill(0);
+            labels = values.map((v, i) => i+1)
             if (groupByYearBoolean) {
                 const groupedByYear = groupByYear(entries, 'week');
                 datasets = createDatasets(groupedByYear, '');
             } else {
                 const counts = countBy(entries, 'week');
-                const values = new Array(24).fill(0);
-                const labels = Array.from(values.keys());
-                Object.entries(counts).forEach(e => values[e[0]] = e[1]);
-
-                while (!values[0]) {
-                    values.shift();
-                    labels.shift();
-                }
-                while (!values[values.length - 1]) {
-                    values.pop();
-                    labels.pop();
-                }
+                Object.entries(counts).forEach(e => values[e[0]-1] = e[1]);
                 datasets = [{ data: values }]
             }
             this.addChart('Vecka', {
                 type: 'bar',
                 data: {
-                    labels: Array.from({ length: 53 }, (_, i) => i + 1),
+                    labels: labels,
                     datasets: datasets,
                 },
                 options: {
