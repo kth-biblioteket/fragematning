@@ -32,6 +32,7 @@ Chart.defaults.font.size = 14;
 
 const config = require('./config.json');
 const colors7 = ['#333333', '#FFA600', '#FF6E54', '#DD5182', '#955196', '#444E86', '#003F5C'];
+const colorSortOrder=config.colorSortOrder;
 
 export default class {
     constructor (root) {
@@ -51,11 +52,44 @@ export default class {
         const div = document.createElement('div');
         const canvas = document.createElement('canvas');
 
+        const sliderContainer = document.createElement('div');
+        const sliderLabel = document.createElement('label');
+        const slider = document.createElement('input');
+        const sliderValueDisplay = document.createElement('span');
+
+        const step = 100;
+
+        const allDataValues = chart.data.datasets.flatMap(dataset => dataset.data || []);
+        const rawMax = Math.max(...allDataValues, 100); // Hämta maxvärdet från alla datasets, med en fallback på 100
+        const currentMax = Math.ceil(rawMax / step) * step; // Anpassa till närmaste steg
+        const sliderMax = Math.ceil((currentMax * 2) / step) * step; // Dubbla för eventuell marginal
+
+        slider.type = 'range';
+        slider.min = '0'; 
+        slider.max = sliderMax.toString();;
+        slider.step = step.toString(); 
+        slider.value = currentMax.toString(); 
+        slider.id = `slider-${title.replace(/\s+/g, '-')}`;
+        sliderLabel.innerHTML = `Maxvärde Y: `;
+        sliderValueDisplay.textContent = slider.value;
+
+        sliderContainer.classList.add('slider-container');
+        sliderContainer.appendChild(sliderLabel);
+        sliderContainer.appendChild(slider);
+        sliderContainer.appendChild(sliderValueDisplay);
+
         div.innerHTML = `<h2>${title}</h2>`;
         div.classList.add('chart');
         div.classList.add('chart-' + chart.type);
         div.appendChild(canvas)
+        if (chart.type === 'bar') {
+            div.appendChild(sliderContainer);
+        }
         this.results.appendChild(div);
+
+        const setCategoryColors = (labels) => {
+            return labels.map(label => config.chartcolors[label] || "#000000");
+        };
 
         chart.options = Object.assign({
             layout: {
@@ -65,21 +99,42 @@ export default class {
             aspectRatio: 1
         }, chart.options);
 
+        if (chart.type === 'bar') {
+            chart.options.scales = {
+                y: {
+                    max: currentMax
+                }
+            };
+        }
+
         chart.options.plugins.tooltip = {
             callbacks: {
                 label: tooltipItem => {
-                    const value = chart.data.datasets[0].data[tooltipItem.dataIndex];
-                    const sum = chart.data.datasets[0].data.reduce((acc, cur) => acc += cur, 0);
-                    return ` ${percentage(value, sum)}% (${value} st)`;
+                    const datasetIndex = tooltipItem.datasetIndex; // Index för aktuellt dataset (år)
+                    const value = chart.data.datasets[datasetIndex].data[tooltipItem.dataIndex]; // Värde för det aktuella året
+                    const sum = chart.data.datasets
+                        .map(ds => ds.data[tooltipItem.dataIndex]) // Hämta värden från alla datasets för den aktuella datapunkten
+                        .reduce((acc, cur) => acc += cur, 0); // Beräkna totalen
+                    const percentageValue = ((value / sum) * 100).toFixed(2); // Beräkna procentandel
+                    if (chart.type === 'bar') {
+                        return `${chart.data.datasets[datasetIndex].label || ''}: ${value} st`; // Endast antal
+                    } else {
+                        const sum = chart.data.datasets[0].data.reduce((acc, cur) => acc += cur, 0);
+                        return `${chart.data.datasets[datasetIndex].label || ''}: ${percentage(value, sum)}% (${value} st)`; // Procent och antal
+                    }
                 },
                 title: tooltipItems => {
-                    return tooltipItems[0].label;
+                    return tooltipItems[0].label; // Behåll titeln som den är
                 }
             }
-        }
+        };
 
         if (chart.type === 'bar') {
-            chart.options.plugins.legend = { display: false };
+            if (chart.options && chart.options.plugins && chart.options.plugins.legend) {
+                //do nothing
+            } else {
+                chart.options.plugins.legend = { display: false };
+            }
 
             chart.data.datasets = chart.data.datasets.map(ds =>
                 Object.assign({
@@ -89,14 +144,32 @@ export default class {
         } else if (chart.type === 'doughnut') {
             chart.options.layout.padding = 5;
 
+            const labels = chart.data.labels || [];
+            const backgroundColors = setCategoryColors(labels);
+
             chart.data.datasets = chart.data.datasets.map(ds =>
                 Object.assign({
-                    backgroundColor: colors7,
+                    backgroundColor: backgroundColors,
                 }, ds)
             );
         }
+        
+        const chartInstance = new Chart(canvas, chart);
 
-        return new Chart(canvas, chart);
+        if (chart.type === 'bar') {
+            slider.addEventListener('input', function () {
+                const newMax = Number(slider.value);
+                console.log('New max value:', newMax);
+                sliderValueDisplay.textContent = newMax;
+
+                if (chartInstance.options.scales && chartInstance.options.scales.y) {
+                    chartInstance.options.scales.y.max = newMax;
+                    chartInstance.update();
+                }
+            });
+        }
+
+        return chartInstance;
     }
 
     getFilters () {
@@ -128,6 +201,8 @@ export default class {
     async update (queryString = this.getFilters()) {
         this.results.innerHTML = '';
 
+        let datasets = [];
+
         const entries = await get('entries' + (queryString ? '?' + queryString : ''));
 
         if (!entries.length) {
@@ -135,105 +210,156 @@ export default class {
             return false;
         }
 
-        //Dagens aktivitet
-        /*
-        const currentDate = new Date();
-        let startDate = new Date(currentDate);
-        startDate.setHours(0, 0, 0, 0);
-        let endDate = new Date(currentDate);
-        endDate.setHours(23, 59, 59, 999);
-        const filteredData = entries.filter(item => {
-            const createdAt = new Date(item.created_at);
-            return createdAt >= startDate && createdAt <= endDate;
-        });
+        // Kontrollera om gruppering per år är aktiverad
+        const groupByYearBoolean = document.getElementById('groupByYearSwitch').checked;
 
-        
-        if (filteredData.length) {
-            const counts = countBy(filteredData, 'hour');
-            
-            const values = new Array(24).fill(0);
-            const labels = Array.from(values.keys());
-            Object.entries(counts).forEach(e => values[e[0]] = e[1]);
 
-            while (!values[0]) {
-                values.shift();
-                labels.shift();
-            }
-            while (!values[values.length - 1]) {
-                values.pop();
-                labels.pop();
-            }
-
-            this.addChart('Dagens aktivitet per timme', {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{ data: values }]
-                },
+        const groupByYear = (entries, key) => {
+            const grouped = {};
+            entries.forEach(entry => {
+                const year = entry.year;
+                const value = entry[key];
+                if (!grouped[year]) {
+                    grouped[year] = {};
+                }
+                if (!grouped[year][value]) {
+                    grouped[year][value] = 0;
+                }
+                grouped[year][value]++;
             });
+            return grouped;
+        };
 
-            this.addTable(
-                groupBy(filteredData, 'question', 'category').sort((a, b) => b.count - a.count).slice(0, 5),
-                'Dagens 5 populäraste frågor',
-                ['Fråga', 'Kategori', 'Antal'],
-                (row, sum) => {
-                    return row
-                        ? [row.question, row.category, row.count]
-                        : ['', '', sum];
-                    
-                },
-                'results-table-50'
-                )
-        }
-        */
+        const setCategoryColors = (labels) => {
+            return labels.map(label => config.chartcolors[label] || "#000000");
+        };
+        const createDatasets = (groupedData, labelPrefix) => {
+            const labels = Object.keys(groupedData); // Åren eller andra nycklar
+            const colors = setCategoryColors(labels); // Färger baserade på labels
+
+            return Object.entries(groupedData).map(([year, counts], index) => {
+                const data = new Array(Math.max(...Object.keys(counts).map(Number)) + 1).fill(0);
+                Object.entries(counts).forEach(([key, count]) => {
+                    data[key] = count;
+                });
+                return {
+                    label: `${labelPrefix} ${year}`,
+                    data: data,
+                    backgroundColor: colors[index],
+                };
+            });
+        };
+
         {
-            const counts = countBy(entries, 'hour');
-            const values = new Array(24).fill(0);
-            const labels = Array.from(values.keys());
-            Object.entries(counts).forEach(e => values[e[0]] = e[1]);
+            if (groupByYearBoolean) {
+                const groupedByYear = groupByYear(entries, 'hour');
+                datasets = createDatasets(groupedByYear, '');
+            } else {
+                const counts = countBy(entries, 'hour');
+                const values = new Array(24).fill(0);
+                const labels = Array.from(values.keys());
+                Object.entries(counts).forEach(e => values[e[0]] = e[1]);
 
-            while (!values[0]) {
-                values.shift();
-                labels.shift();
+                while (!values[0]) {
+                    values.shift();
+                    labels.shift();
+                }
+                while (!values[values.length - 1]) {
+                    values.pop();
+                    labels.pop();
+                }
+                datasets = [{ data: values }]
             }
-            while (!values[values.length - 1]) {
-                values.pop();
-                labels.pop();
-            }
-
             this.addChart('Timma', {
                 type: 'bar',
                 data: {
-                    labels: labels,
-                    datasets: [{ data: values }]
+                    labels: Array.from({ length: 24 }, (_, i) => i),
+                    datasets: datasets,
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            display:  groupByYearBoolean,
+                            position: 'top', // Placera över diagrammet
+                        },
+                    },
                 },
             });
         }
+    
         {
-            const counts = countBy(entries, 'weekday');
-            const values = new Array(7).fill(0);
-            const labels = ['måndag', 'tisdag', 'onsdag', 'torsdag', 'fredag', 'lördag', 'söndag'];
-            Object.entries(counts).forEach(e => values[e[0]] = e[1]);
+            datasets = [];
+            if (groupByYearBoolean) {
+                const groupedByYear = groupByYear(entries, 'weekday');
+                datasets = createDatasets(groupedByYear, '');
+            } else {
+                const counts = countBy(entries, 'weekday');
+                const values = new Array(24).fill(0);
+                const labels = Array.from(values.keys());
+                Object.entries(counts).forEach(e => values[e[0]] = e[1]);
 
+                while (!values[0]) {
+                    values.shift();
+                    labels.shift();
+                }
+                while (!values[values.length - 1]) {
+                    values.pop();
+                    labels.pop();
+                }
+                datasets = [{ data: values }]
+            }
             this.addChart('Veckodag', {
                 type: 'bar',
                 data: {
-                    labels: labels,
-                    datasets: [{ data: values }]
+                    labels: ['Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lördag', 'Söndag'],
+                    datasets: datasets,
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            display: groupByYearBoolean, // Aktivera legend
+                            position: 'top', // Placera över diagrammet
+                        },
+                    },
                 },
             });
         }
+    
         {
-            const counts = countBy(entries, 'week');
-            const values = new Array(53).fill(0);
-            Object.entries(counts).forEach(e => values[e[0]-1] = e[1]);
+            datasets = [];
+            if (groupByYearBoolean) {
+                const groupedByYear = groupByYear(entries, 'week');
+                datasets = createDatasets(groupedByYear, '');
+            } else {
+                const counts = countBy(entries, 'week');
+                const values = new Array(24).fill(0);
+                const labels = Array.from(values.keys());
+                Object.entries(counts).forEach(e => values[e[0]] = e[1]);
 
+                while (!values[0]) {
+                    values.shift();
+                    labels.shift();
+                }
+                while (!values[values.length - 1]) {
+                    values.pop();
+                    labels.pop();
+                }
+                datasets = [{ data: values }]
+            }
             this.addChart('Vecka', {
                 type: 'bar',
                 data: {
-                    labels: values.map((v, i) => i+1),
-                    datasets: [{ data: values }]
-                }
+                    labels: Array.from({ length: 53 }, (_, i) => i + 1),
+                    datasets: datasets,
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            display: groupByYearBoolean, // Aktivera legend
+                            position: 'top', // Placera över diagrammet
+                        },
+                    },
+                },
             });
         }
         {
@@ -248,31 +374,80 @@ export default class {
         }
         {
             const counts = countBy(entries, 'type');
+            const sortedEntries = Object.entries(counts);
+
+            const sortedEntriesByColor = sortedEntries.sort((a, b) => {
+                const colorA = config.chartcolors[a[0]] || "#000000";
+                const colorB = config.chartcolors[b[0]] || "#000000";
+                const indexA = colorSortOrder.indexOf(colorA);
+                const indexB = colorSortOrder.indexOf(colorB);
+
+                return indexA - indexB;
+            });
+
+            const sortedLabels = sortedEntriesByColor.map(entry => entry[0]);
+            const sortedData = sortedEntriesByColor.map(entry => entry[1]);
+
             this.addChart('Typ', {
                 type: 'doughnut',
                 data: {
-                    labels: Object.keys(counts),
-                    datasets: [{ data: Object.values(counts) }]
+                    labels: sortedLabels,
+                    datasets: [{
+                        data: sortedData
+                    }]
                 }
             });
         }
         {
             const counts = countBy(entries, 'location');
+            const sortedEntries = Object.entries(counts);
+
+            const sortedEntriesByColor = sortedEntries.sort((a, b) => {
+                const colorA = config.chartcolors[a[0]] || "#000000";
+                const colorB = config.chartcolors[b[0]] || "#000000";
+                const indexA = colorSortOrder.indexOf(colorA);
+                const indexB = colorSortOrder.indexOf(colorB);
+
+                return indexA - indexB;
+            });
+
+            const sortedLabels = sortedEntriesByColor.map(entry => entry[0]);
+            const sortedData = sortedEntriesByColor.map(entry => entry[1]);
+
             this.addChart('Plats', {
                 type: 'doughnut',
                 data: {
-                    labels: Object.keys(counts),
-                    datasets: [{ data: Object.values(counts) }]
+                    labels: sortedLabels,
+                    datasets: [{
+                        data: sortedData
+                    }]
                 }
             });
         }
         {
             const counts = countBy(entries, 'category');
+            
+            const sortedEntries = Object.entries(counts);
+
+            const sortedEntriesByColor = sortedEntries.sort((a, b) => {
+                const colorA = config.chartcolors[a[0]] || "#000000";
+                const colorB = config.chartcolors[b[0]] || "#000000";
+                const indexA = colorSortOrder.indexOf(colorA);
+                const indexB = colorSortOrder.indexOf(colorB);
+
+                return indexA - indexB;
+            });
+
+            const sortedLabels = sortedEntriesByColor.map(entry => entry[0]);
+            const sortedData = sortedEntriesByColor.map(entry => entry[1]);
+
             this.addChart('Kategori', {
                 type: 'doughnut',
                 data: {
-                    labels: Object.keys(counts),
-                    datasets: [{ data: Object.values(counts)}]
+                    labels: sortedLabels,
+                    datasets: [{
+                        data: sortedData
+                    }]
                 }
             });
         }
@@ -391,6 +566,10 @@ export default class {
                     <div>
                         <label for="comment"><input id="comment" name="comment" type="checkbox">Har kommentar</label>
                     </div>
+                    <label>
+                        <input type="checkbox" id="groupByYearSwitch">
+                        Gruppera per år
+                    </label>
                 </div>
             </form>
             <div id="results"></div>`;

@@ -12,6 +12,31 @@
         "Södertälje",
         "Ospecificerat"
     ],
+    "chartcolors": {
+        "Telefon": "#004791",
+        "Ute i rummet": "#6298D2",
+        "Infodisk huvudbiblioteket": "#000061",
+        "Infodisk Kista": "#E86A58",
+        "Infodisk Södertälje": "#78001A",
+        "Edge": "#339C9C",
+        "Chatt": "#1C434C",
+        "Huvudbiblioteket": "#004791",
+        "Södertälje": "#6298D2",
+        "Kista": "#000061",
+        "Ospecificerat": "#E86A58",
+        "Frågor om det fysiska rummet": "#004791",
+        "Hänvisningar": "#6298D2",
+        "Cirkulation/Låneärenden":"#000061",
+        "IT-frågor"	:"#E86A58",
+        "Källor och referensfrågor":"#78001A",
+        "Övrigt":"#339C9C",
+        "2022": "#004791",
+        "2023": "#6298D2",
+        "2024": "#000061",
+        "2025": "#E86A58"
+    },
+    "colorSortOrder":["#004791","#6298D2","#000061","#E86A58","#78001A","#339C9C","#1C434C"],
+    "comment": "results skapad för att statistik ska kunna visas för types och locations som kanske tagits bort i registeringsgränssnittet. T ex Kista",
     "results": {
         "types": [
             "Telefon",
