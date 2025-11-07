@@ -3,13 +3,11 @@
         "Telefon",
         "Ute i rummet",
         "Infodisk huvudbiblioteket",
-        "Infodisk Södertälje",
         "Edge",
         "Chatt"
     ],
     "locations": [
         "Huvudbiblioteket",
-        "Södertälje",
         "Ospecificerat"
     ],
     "chartcolors": {
